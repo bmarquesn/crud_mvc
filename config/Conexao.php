@@ -10,6 +10,7 @@ class Conexao {
 
     public static function getInstance() {
         if(is_null(self::$conexao)) {
+			/** futuramente fazer o sistema aceitar conexão PDO com o Banco de Dados */
             if(TIPOBD === "PDO") {
                 self::$conexao = new \PDO('mysql:host=' . HOST . ';port=' . PORT . ';dbname=' . DATABASE, USER, PASSWORD);
                 self::$conexao->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);

@@ -190,16 +190,19 @@ class MainModel extends Conexao {
         return false;
     }
 
-    public function destroy($campo,  $id) {
-        /*if($mysqli->exec("DELETE FROM " . $this->table . " WHERE id='{$id}';")) {
-            return true;
-        }*/
-        $query = "UPDATE " . $this->table . " SET ativo = 0 WHERE " . $campo . " = " . (int)$id . ";";
+    public function destroy($campo,  $id, $excluir = 0) {
+        if($excluir === 1) {
+            $query = "DELETE FROM " . $this->table . " WHERE " . $campo . " = " . (int)$id . ";";
+        } else {
+            $query = "UPDATE " . $this->table . " SET ativo = 0 WHERE " . $campo . " = " . (int)$id . ";";
+        }
 
         if($conexao = Conexao::getInstance()) {
             $stmt = $conexao->prepare($query);
             
             $stmt->execute();
+            
+            return true;
         }
 
         return false;

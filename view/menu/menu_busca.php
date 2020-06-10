@@ -21,6 +21,8 @@ switch(strtoupper($pagina_Atual)) {
                 </div>
             </div><br />
             ';
+        } else {
+            $html_titulo_search = "<h2>" . strtoupper($funcao_Atual) . " Usuário</h2>";
         }
         break;
     default:

@@ -49,9 +49,14 @@ class UsuarioController extends Controller {
         $id_usuario = NULL;
 
         foreach($dados_salvar as $key => $value) {
+            $novo_usuario = true;
+
             if(!empty($value)) {
-                if($key == 'id_usuario') {
-                    $this->model1->__set('id', 'id-'.$value);
+                if($key == 'id_usuario' && !empty($value)) {
+                    $novo_usuario = false;
+                    $this->model1->__set('id', 'id-'.(int)$value);
+                    /** chave estrangeira - na tabela endereco tem o id_usuario */
+                    $this->model2->__set('id', 'id_usuario-'.(int)$value);
                 }
 
                 if($key == 'nome' || $key == 'email' || $key == 'usuario' || $key == 'senha') {
@@ -71,10 +76,12 @@ class UsuarioController extends Controller {
         }
 
         $id_usuario = $this->model1->save(0);
+
+        if($novo_usuario) {
+            $this->model2->__set('id_usuario', (int)$id_usuario);
+        }
         
-        /** chave estrangeira - na tabela endereco tem o id_usuario */
-        $this->model2->__set('id', 'id_usuario-'.$id_usuario);
-        $this->model2->save();
+        $this->model2->save(0);
         
         echo "salvou";
         die;
@@ -96,7 +103,8 @@ class UsuarioController extends Controller {
     public function excluir() {
         $dados_salvar = $_POST;
         
-        $this->model1->destroy(array_keys($dados_salvar)[0], array_values($dados_salvar)[0]);
+        $this->model1->destroy(array_keys($dados_salvar)[0], array_values($dados_salvar)[0], 0);
+        $this->model2->destroy('id_usuario', array_values($dados_salvar)[0], 1);
 
         echo "salvou";
         die;
